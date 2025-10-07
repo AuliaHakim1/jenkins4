@@ -4,6 +4,7 @@ pipeline {
     environment {
         PYTHON = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
         VENV_DIR = "venv"
+        PATH = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\Scripts;${env.PATH}"
     }
 
     stages {
@@ -19,7 +20,7 @@ pipeline {
                 if exist %VENV_DIR% rmdir /s /q %VENV_DIR%
                 "%PYTHON%" -m venv %VENV_DIR%
                 call %VENV_DIR%\\Scripts\\activate
-                python -m pip install --upgrade pip
+                call python -m pip install --upgrade pip
                 '''
             }
         }
@@ -28,7 +29,7 @@ pipeline {
             steps {
                 bat '''
                 call %VENV_DIR%\\Scripts\\activate
-                pip install -r requirements.txt
+                call pip install -r requirements.txt
                 '''
             }
         }
@@ -37,7 +38,7 @@ pipeline {
             steps {
                 bat '''
                 call %VENV_DIR%\\Scripts\\activate
-                pytest test_app.py
+                call pytest test_app.py
                 '''
             }
         }
