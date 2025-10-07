@@ -1,22 +1,44 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON = "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe"
+        VENV_DIR = "venv"
+    }
+
     stages {
         stage('Check Python') {
             steps {
-                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" --version'
+                bat '"%PYTHON%" --version'
+            }
+        }
+
+        stage('Setup Virtual Environment') {
+            steps {
+                bat '''
+                if exist %VENV_DIR% rmdir /s /q %VENV_DIR%
+                "%PYTHON%" -m venv %VENV_DIR%
+                call %VENV_DIR%\\Scripts\\activate
+                python -m pip install --upgrade pip
+                '''
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pip install -r requirements.txt'
+                bat '''
+                call %VENV_DIR%\\Scripts\\activate
+                pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pytest test_app.py'
+                bat '''
+                call %VENV_DIR%\\Scripts\\activate
+                pytest test_app.py
+                '''
             }
         }
 
@@ -28,7 +50,7 @@ pipeline {
                 }
             }
             steps {
-                echo "Simulating deploy from branch ${env.BRANCH_NAME}"
+                echo "🚀 Simulating deploy from branch ${env.BRANCH_NAME}"
             }
         }
     }
