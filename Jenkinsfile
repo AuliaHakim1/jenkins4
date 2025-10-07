@@ -1,11 +1,12 @@
 pipeline {
     agent any
 
-    stage('Install Dependencies') {
-    steps {
-        bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python311\\python.exe" -m pip install -r requirements.txt' 
-    }
-}
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python311\\python.exe" -m pip install -r requirements.txt'
+            }
+        }
 
 
         stage('Run Tests') {
